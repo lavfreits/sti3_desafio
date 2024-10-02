@@ -1,16 +1,57 @@
-# sti3
+# Desafio: Lista de Pedidos
 
-A new Flutter project.
+O projeto consiste em uma aplicação que deverá consumir a API que retornará uma Lista de Pedidos.  
+A consulta da API retornará os seguintes dados: cliente, endereço de entrega, itens e parcelas de pagamento.  
+Os dados deverão ser armazenados em banco de dados utilizando Hive para persistência de dados, para posteriormente serem manipulados nas telas.
 
-## Getting Started
+### Tecnologias utilizadas
 
-This project is a starting point for a Flutter application.
+- **Flutter**
+- **Dart**
+- **Hive** (para persistência de dados)
+- **GetIt** (para injeção de dependências)
+- **HTTP** (para requisições à API)
+- **Padrão MVC**
+- **ChangeNotifier** (para gerenciamento de estado)
 
-A few resources to get you started if this is your first Flutter project:
+### Instalação e configuração
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Clone o repositório:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+   ```bash
+   git clone https://github.com/seu-usuario/seu-repositorio.git
+
+
+2. Acesse a pasta do projeto:
+
+````bash
+cd lista-de-pedidos
+````
+3. Instale as dependências:
+````
+bash
+flutter pub get
+````
+4. Execute o projeto:
+````
+bash
+flutter run
+````
+### Descrição do Projeto
+- URL da API: https://desafiotecnicosti3.azurewebsites.net/pedido
+
+- Tela Inicial
+A tela inicial contém um menu lateral com as opções: Pedidos e Relatórios.
+
+- Tela de Pedidos
+Na tela de pedidos, tem um botão Consultar, que ao ser clicado, consume o webservice para trazer uma lista de pedidos que é armazenada no banco de dados.
+Tem um campo Pesquisa, que busca no banco de dados pelo nome do cliente, e uma tabela abaixo com as seguintes colunas: Número, Data, Cliente, Status, Valor Total.
+Cada item da lista corresponde a um pedido de um cliente, com 1 ou vários produtos e 1 ou várias parcelas.
+
+Ao clicar 1x no item da lista, exibi na coluna lateral todos os dados do pedido correspondente.
+Ao clicar 2x ou no botão Detalhes, abre um modal para exibir os dados dos produtos e parcelas correspondentes ao pedido selecionado.
+Tela de Relatórios (Desafio Extra)
+Nesta tela tem um combo box / dropdowm para selecionar as seguintes opções e apresentar os seguintes dados numa tabela abaixo:
+
+- Listagem de Produtos mais vendidos: Produto, Quantidade e Valor Médio
+- Totalização de Formas de Pagamento por Dia: Data do Pedido, Forma de Pagamento e Valor
