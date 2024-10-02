@@ -8,6 +8,7 @@ class OrderController extends ChangeNotifier {
 
   List<Order> orders = [];
   bool _isLoading = false;
+  bool isError = false;
 
   OrderController(this._orderRepository);
 
@@ -15,17 +16,21 @@ class OrderController extends ChangeNotifier {
 
   Future<void> getOrders() async {
     _setLoadingState(true);
+    isError = false;
 
     try {
       orders = await _orderRepository.getOrders();
     } catch (e) {
       debugPrint('Error fetching orders: $e');
+      isError = true;
     } finally {
       _setLoadingState(false);
     }
   }
 
   Future<void> searchOrders(String customerName) async {
+    isError = false;
+
     _setLoadingState(true);
 
     try {
@@ -34,6 +39,7 @@ class OrderController extends ChangeNotifier {
           : _orderRepository.filterOrdersByCustomerName(customerName);
     } catch (e) {
       debugPrint('Error searching orders: $e');
+      isError = true;
     } finally {
       _setLoadingState(false);
     }

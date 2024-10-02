@@ -16,7 +16,9 @@ class OrderRepository {
 
     if (ordersJson == null) {
       List<Order> orders = await _orderService.fetchOrders();
+
       await saveOrders(orders);
+
       return orders;
     } else {
       return _decodeOrdersFromJson(ordersJson);
@@ -25,6 +27,7 @@ class OrderRepository {
 
   Future<void> saveOrders(List<Order> orders) async {
     String ordersJson = _encodeOrdersToJson(orders);
+
     await _orderBox.put('orders', ordersJson);
   }
 
@@ -46,6 +49,7 @@ class OrderRepository {
 
   List<Order> _decodeOrdersFromJson(String ordersJson) {
     List<dynamic> ordersDecoded = json.decode(ordersJson);
+
     return ordersDecoded.map((orderJson) => Order.fromJson(orderJson)).toList();
   }
 

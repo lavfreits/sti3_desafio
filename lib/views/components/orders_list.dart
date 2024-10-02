@@ -28,6 +28,10 @@ class OrdersList extends StatelessWidget {
           return const Center(child: Text("Nenhum pedido encontrado"));
         }
 
+        if (controller.isError) {
+          return const Center(child: Text("Erro! Tente novamente"));
+        }
+
         return Column(
           children: controller.orders.map(
             (order) {

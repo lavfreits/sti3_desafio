@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../models/order.dart';
+import '../models/payment_summary.dart';
+import '../models/top_selling_product.dart';
 import '../services/order_repository.dart';
 
 class ReportController extends ChangeNotifier {
@@ -16,13 +18,12 @@ class ReportController extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Map<String, dynamic>> get topSellingProducts =>
+  List<TopSellingProduct> get topSellingProducts =>
       _calculateTopSellingProducts();
 
-  List<Map<String, dynamic>> get paymentTotalByDay =>
-      _calculatePaymentTotalByDay();
+  List<PaymentSummary> get paymentTotalByDay => _calculatePaymentTotalByDay();
 
-  List<Map<String, dynamic>> _calculateTopSellingProducts() {
+  List<TopSellingProduct> _calculateTopSellingProducts() {
     final productCounts = <String, int>{};
     final productValues = <String, double>{};
 
@@ -47,22 +48,24 @@ class ReportController extends ChangeNotifier {
     }
   }
 
-  List<Map<String, dynamic>> _mapProductDataToResults(
-      Map<String, int> productCounts, Map<String, double> productValues) {
+  List<TopSellingProduct> _mapProductDataToResults(
+    Map<String, int> productCounts,
+    Map<String, double> productValues,
+  ) {
     return productCounts.entries.map((entry) {
       final productName = entry.key;
       final quantity = entry.value;
       final averageValue = productValues[productName]! / quantity;
 
-      return {
-        'produto': productName,
-        'quantidade': quantity,
-        'valorMédio': averageValue.toStringAsFixed(2),
-      };
+      return TopSellingProduct(
+        productName: productName,
+        quantity: quantity,
+        averageValue: averageValue,
+      );
     }).toList();
   }
 
-  List<Map<String, dynamic>> _calculatePaymentTotalByDay() {
+  List<PaymentSummary> _calculatePaymentTotalByDay() {
     final paymentsByDay = <String, Map<String, double>>{};
 
     for (var order in _orders) {
@@ -91,19 +94,19 @@ class ReportController extends ChangeNotifier {
     return dateString.split('T')[0]; // retorna a data no formato YYYY-MM-DD
   }
 
-  List<Map<String, dynamic>> _mapPaymentDataToResults(
+  List<PaymentSummary> _mapPaymentDataToResults(
     Map<String, Map<String, double>> paymentsByDay,
   ) {
-    final result = <Map<String, dynamic>>[];
+    final result = <PaymentSummary>[];
 
     paymentsByDay.forEach((date, paymentData) {
       paymentData.forEach(
         (paymentMethod, total) {
-          result.add({
-            'data': date,
-            'forma de pagamento': paymentMethod,
-            'valor': total.toStringAsFixed(2),
-          });
+          result.add(PaymentSummary(
+            date: date,
+            paymentMethod: paymentMethod,
+            totalValue: total,
+          ));
         },
       );
     });

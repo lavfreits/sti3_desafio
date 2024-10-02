@@ -12,20 +12,31 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   String selectedOption = 'Produtos mais vendidos';
+  final reportController = GetIt.instance.get<ReportController>();
+  late Future<void> future;
+
+  @override
+  void initState() {
+    super.initState();
+
+    future = reportController.fetchOrders();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final reportController = GetIt.instance.get<ReportController>();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Relatórios'),
       ),
       body: FutureBuilder(
-        future: reportController.fetchOrders(),
+        future: future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return const Center(child: Text('Erro! Tente novamente'));
           }
 
           return Column(
@@ -82,18 +93,18 @@ class _ReportPageState extends State<ReportPage> {
                                 cells: [
                                   DataCell(
                                     Text(
-                                      product['produto'],
+                                      product.productName,
                                       overflow: TextOverflow.fade,
                                     ),
                                   ),
                                   DataCell(
                                     Text(
-                                      product['quantidade'].toString(),
+                                      product.quantity.toString(),
                                     ),
                                   ),
                                   DataCell(
                                     Text(
-                                      product['valorMédio'],
+                                      product.averageValue.toStringAsFixed(2),
                                     ),
                                   ),
                                 ],
@@ -124,20 +135,19 @@ class _ReportPageState extends State<ReportPage> {
                                 cells: [
                                   DataCell(
                                     Text(
-                                      payment['data'],
+                                      payment.date,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   DataCell(
                                     Text(
-                                      payment['forma de pagamento'],
+                                      payment.paymentMethod,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   DataCell(
                                     Text(
-                                      payment['valor'],
-                                      overflow: TextOverflow.ellipsis,
+                                      payment.totalValue.toStringAsFixed(2),
                                     ),
                                   ),
                                 ],
